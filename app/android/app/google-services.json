@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "315264826431",
+    "firebase_url": "https://edc-app-bd702.firebaseio.com",
+    "project_id": "edc-app-bd702",
+    "storage_bucket": "edc-app-bd702.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315264826431:android:6750a791f375ffef068c8a",
+        "android_client_info": {
+          "package_name": "com.edc.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315264826431-fe91r0bv0ug4896h19gj0a1ks32p4a9h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6I39aTp9QfJvelAJaN86ndQfYMdRDKHM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315264826431-fe91r0bv0ug4896h19gj0a1ks32p4a9h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
