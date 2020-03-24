@@ -1,4 +1,5 @@
 import 'package:app/services/auth.dart';
+import 'package:app/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -16,10 +17,11 @@ class _SignInState extends State<SignIn> {
   String error ='';
 
   final _formKey = GlobalKey<FormState>();
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.cyanAccent,
@@ -96,14 +98,19 @@ class _SignInState extends State<SignIn> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
                   onPressed: () async {
+
                     // Validate returns true if the form is valid, or false
                     // otherwise.
                     if (_formKey.currentState.validate()) {
+                      setState(() {
+                        loading = true;
+                      });
                       // If the form is valid, display a Snackbar.
                       // Scaffold.of(context)
                       dynamic result = await _auth.signInEmailandPass(uname, pass);
                       if(result == null){
                         setState(() {
+                          loading = false;
                           error='Please enter valid credentials!';
                         });
                       }
