@@ -10,9 +10,8 @@ class AuthService {
   }
   //auth change user stream
   Stream<User> get user {
-    return _auth.onAuthStateChanged
-    //.map((FirebaseUser user)=> _userFromFirebaseUser(user)); OR
-    .map(_userFromFirebaseUser);
+    return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
+    //.map((FirebaseUser user)=> _userFromFirebaseUser(user)); OR 
   }
 
   //sign in anonymously

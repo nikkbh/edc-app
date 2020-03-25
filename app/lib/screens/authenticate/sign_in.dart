@@ -105,8 +105,7 @@ class _SignInState extends State<SignIn> {
                       setState(() {
                         loading = true;
                       });
-                      // If the form is valid, display a Snackbar.
-                      // Scaffold.of(context)
+                      
                       dynamic result = await _auth.signInEmailandPass(uname, pass);
                       if(result == null){
                         setState(() {
@@ -114,10 +113,6 @@ class _SignInState extends State<SignIn> {
                           error='Please enter valid credentials!';
                         });
                       }
-                      //     .showSnackBar(SnackBar(content: Text('Processing Data')));
-                          // if(){
-
-                          // }
                     }
                   },
                   child: Text('Login'),
