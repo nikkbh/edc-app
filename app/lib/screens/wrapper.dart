@@ -2,6 +2,7 @@ import 'package:app/models/user.dart';
 import 'package:app/screens/authenticate/authenticate.dart';
 import 'package:app/screens/domains/doc.dart';
 import 'package:app/screens/domains/hr.dart';
+import 'package:app/screens/domains/temp.dart';
 import 'package:app/screens/home/home.dart';
 //import 'package:app/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class Wrapper extends StatelessWidget {
       return Authenticate();
     }else{
       if(user.uid == hrd){return HR();}
-      else if(user.uid == docd){return Doc();}
+      else if(user.uid == docd){return DOC();}
       else{return Home();}
     }
     
