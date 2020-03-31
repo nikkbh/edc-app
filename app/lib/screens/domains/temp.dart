@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 
 class DOC extends StatefulWidget {
   @override
@@ -19,13 +20,14 @@ class _DOCState extends State<DOC> {
 
   File sampleDocument;
   File _docPath;
+  //final bool _uploaded = false;
 
   void openFileExplorer() async{
     try{
       _docPath = await FilePicker.getFile(type: FileType.any, fileExtension: 'pdf');
       //uploadToFirebase();
       
-    }catch(e){
+    }on PlatformException catch(e){
       print("Unsupported Operation"+ e.toString());
     }
      if(!mounted) return;
@@ -65,6 +67,7 @@ class _DOCState extends State<DOC> {
     return Container(
       child: Column(
         children: <Widget>[
+          Padding(padding: const EdgeInsets.all(30.0)),
           RaisedButton(
             elevation: 7.0,
             child: Text("Upload Document"),
@@ -76,12 +79,18 @@ class _DOCState extends State<DOC> {
             color: Colors.black,
             onPressed:(){
               final StorageReference firebasestorageRef = 
-                FirebaseStorage.instance.ref().child('');
+                FirebaseStorage.instance.ref().child('Report.pdf');
               final StorageUploadTask task = 
                 firebasestorageRef.putFile(sampleDocument);
-          }),
+              if(task.isSuccessful){
+                setState(() {
+                  Text("Document Uploaded");
+                });
+              }
+            }
+          ),
         ],
-      )
+      ),
     );
   }
 }

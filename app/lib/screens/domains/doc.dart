@@ -1,136 +1,113 @@
 import 'package:app/services/auth.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'dart:io';
-//import 'package:flutter/services.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
-
 class Doc extends StatefulWidget {
-  Doc() : super();
-  final String title = 'Firebase Storage'; 
   @override
   _DocState createState() => _DocState();
 }
 
 class _DocState extends State<Doc> {
+
   final AuthService _auth = AuthService();
-  String _path;
-  String _extension;
-  FileType _ftype = FileType.any;
+
+  File sampleDocument;
+  String _docPath;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<StorageUploadTask> _tasks = <StorageUploadTask>[];
+  //final bool _uploaded = false;
 
-
-  openFileExplorer() async{
+  void openFileExplorer() async{
     try{
-      _path = await FilePicker.getFilePath(type: _ftype, fileExtension: _extension);
+      _docPath = 
+      await FilePicker.getFilePath(type: FileType.any, fileExtension: 'pdf');
       uploadToFirebase();
-      
-    }catch(e){
+    }on PlatformException catch(e){
       print("Unsupported Operation"+ e.toString());
     }
-     if(!mounted){return;}
+     if(!mounted) return;
   }
-  
+
   uploadToFirebase(){
-    String fileName = _path.split('.').last;
-    String filePath = _path;
+    String fileName = _docPath.split('/').last;
+    String filePath = _docPath;
     upload(fileName, filePath);
+
   }
 
   upload(fileName, filePath){
-    _extension = fileName.toString().split('.').last;
     StorageReference storageReference = FirebaseStorage.instance.ref().child(fileName);
-    final StorageUploadTask uploadTask = 
-    storageReference.putFile(File(filePath),
-    StorageMetadata(
-      contentType: '$_ftype/$_extension',
-    ));
+    final StorageUploadTask uploadTask = storageReference.putFile(File(filePath));
     setState(() {
       _tasks.add(uploadTask);
     });
+    
   }
+
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = <Widget>[];
-    _tasks.forEach((StorageUploadTask task){
+    _tasks.forEach((StorageUploadTask task) {
       final Widget tile = UploadTaskListTile(
         task: task,
-        onDismissed:(){
-          setState(() {
-            _tasks.remove(task);
-          });
-        },
-        onDownload: (){
-          downloadFile(task.lastSnapshot.ref);
-        },
+        onDismissed: () => setState(() => _tasks.remove(task)),
+        onDownload: () => downloadFile(task.lastSnapshot.ref),
       );
       children.add(tile);
     });
-    return new MaterialApp(
-    home:Scaffold(
-     key: _scaffoldKey,
-      backgroundColor: Colors.white,
+
+    return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Documentation'),
+        title: new Text("Documentation"),
+        //centerTitle: true,
         backgroundColor: Colors.orange,
         actions: <Widget>[
-          FlatButton.icon(icon: Icon(Icons.person),
-          label: Text("Logout"),
+          FlatButton.icon(icon: Icon(Icons.exit_to_app),
+          label:Text(""),
           onPressed: () async{
             await _auth.signOutUser();
           },
           )
         ],
       ),
-      body: Container(
-            child: Row( 
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-            Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(padding: const EdgeInsets.all(30.0)),
-                    RaisedButton(
-                      onPressed: (){
-                        //openFileExplorer();
-                      },
-                      child: Text('Upload Document'),
-                      color: Colors.black,
-                      textColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
-                      shape: new RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Flexible(
-                      child: SizedBox(
-                        height: 200.0,
-                        child: ListView(
-                          children: children, 
-                        ),
-                      )
-                    )
-                  ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(padding: const EdgeInsets.all(20.0)),
+            Center(
+              child: Text("Document Upload Tasks", 
+                style: TextStyle( fontSize: 30.0, fontWeight: FontWeight.bold)),
             ),
-        ],
+            //SizedBox(height: 20.0),
+            Flexible(
+                child: ListView(
+                  children: children,
+                ),
+              ),
+          ],
+        ),
       ),
-    ),
-    ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: openFileExplorer,
+        child: Icon(Icons.file_upload),
+      ),
     );
-  }
-  Future<void> downloadFile(StorageReference ref) async{
+  } 
+  Future<void> downloadFile(StorageReference ref) async {
     final String url = await ref.getDownloadURL();
     final http.Response downloadData = await http.get(url);
     final Directory systemTempDir = Directory.systemTemp;
-    final File tempFile = File('${systemTempDir.path}/tmp.pdf');
-    if(tempFile.existsSync()){
+    final File tempFile = File('${systemTempDir.path}/tmp.jpg');
+    if (tempFile.existsSync()) {
       await tempFile.delete();
     }
     await tempFile.create();
@@ -139,57 +116,72 @@ class _DocState extends State<Doc> {
     var bodyBytes = downloadData.bodyBytes;
     final String name = await ref.getName();
     final String path = await ref.getPath();
-    print('Success\nDownloaded $name\nUrls: $url\nPath: $path\nBytes Count: $byteCount');
+    print(
+      'Success!\nDownloaded $name \nUrl: $url'
+      '\npath: $path \nBytes Count :: $byteCount',
+    );
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.white,
+        content: Image.memory(
+          bodyBytes,
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
   }
 }
 
 class UploadTaskListTile extends StatelessWidget {
-  const UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload}) : super(key: key);
-
+  const UploadTaskListTile(
+      {Key key, this.task, this.onDismissed, this.onDownload})
+      : super(key: key);
+ 
   final StorageUploadTask task;
   final VoidCallback onDismissed;
   final VoidCallback onDownload;
-
-  String get status{
+ 
+  String get status {
     String result;
-    if(task.isComplete){
-      if(task.isSuccessful){
+    if (task.isComplete) {
+      if (task.isSuccessful) {
         result = 'Complete';
-      }else if(task.isCanceled){
-        result = 'Cancelled';
-      }else{
-        result = 'Failed Error ${task.lastSnapshot.error}';
+      } else if (task.isCanceled) {
+        result = 'Canceled';
+      } else {
+        result = 'Failed ERROR: ${task.lastSnapshot.error}';
       }
-    }else if(task.isInProgress){
+    } else if (task.isInProgress) {
       result = 'Uploading';
-    }else if(task.isPaused){
+    } else if (task.isPaused) {
       result = 'Paused';
     }
     return result;
   }
-
-  String bytesTransferrred(StorageTaskSnapshot snapshot){
+  
+  String _bytesTransferred(StorageTaskSnapshot snapshot) {
     return '${snapshot.bytesTransferred}/${snapshot.totalByteCount}';
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<StorageTaskEvent>(
       stream: task.events,
-      builder: (BuildContext context, AsyncSnapshot<StorageTaskEvent> asyncSnapshot){
+      builder: (BuildContext context,
+          AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
         Widget subtitle;
-        if(asyncSnapshot.hasData){
+        if (asyncSnapshot.hasData) {
           final StorageTaskEvent event = asyncSnapshot.data;
           final StorageTaskSnapshot snapshot = event.snapshot;
-          subtitle = Text('$status: ${bytesTransferrred(snapshot)} bytes sent');
-        }else{
-          subtitle = const Text('starting... ');
+          subtitle = Text('$status: ${_bytesTransferred(snapshot)} bytes sent');
+        } else {
+          subtitle = const Text('Starting...');
         }
         return Dismissible(
           key: Key(task.hashCode.toString()),
-          onDismissed: (_) => onDismissed, 
+          onDismissed: (_) => onDismissed(),
           child: ListTile(
-            title:Text('Upload Task #${task.hashCode}'),
+            title: Text('Upload Task #${task.hashCode}'),
             subtitle: subtitle,
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -197,28 +189,31 @@ class UploadTaskListTile extends StatelessWidget {
                 Offstage(
                   offstage: !task.isInProgress,
                   child: IconButton(
-                    icon: const Icon(Icons.pause), 
-                    onPressed: () => task.pause()),   
+                    icon: const Icon(Icons.pause),
+                    onPressed: () => task.pause(),
+                  ),
                 ),
                 Offstage(
                   offstage: !task.isPaused,
                   child: IconButton(
-                    icon: const Icon(Icons.file_upload), 
-                    onPressed: () => task.resume()),   
+                    icon: const Icon(Icons.file_upload),
+                    onPressed: () => task.resume(),
+                  ),
                 ),
                 Offstage(
                   offstage: task.isComplete,
                   child: IconButton(
-                    icon: const Icon(Icons.cancel), 
-                    onPressed: () => task.cancel()),   
+                    icon: const Icon(Icons.cancel),
+                    onPressed: () => task.cancel(),
+                  ),
                 ),
                 Offstage(
                   offstage: !(task.isComplete && task.isSuccessful),
-                    child: IconButton(
-                    icon: const Icon(Icons.file_download), 
-                    onPressed: () => onDownload()),   
+                  child: IconButton(
+                    icon: const Icon(Icons.file_download),
+                    onPressed: onDownload,
+                  ),
                 ),
-
               ],
             ),
           ),
