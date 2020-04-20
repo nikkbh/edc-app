@@ -27,6 +27,12 @@ dependencies:
   cloud_firestore: ^0.13.4+2
   provider: ^4.0.4
   flutter_spinkit: ^4.1.2
+  http: ^0.12.0+4
+  file_picker: ^1.5.0+2
+  firebase_storage: ^3.1.5
+  documents_picker:
+  intl: ^0.16.1
+  datetime_picker_formfield:  ^1.0.0
 
 dev_dependencies:
   flutter_test:
