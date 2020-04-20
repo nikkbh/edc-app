@@ -1,3 +1,4 @@
+import 'package:app/review_bloc.dart';
 import 'package:app/screens/wrapper.dart';
 import 'package:app/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +13,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {   
       return StreamProvider<User>.value(
         value: AuthService().user, 
+        child: ChangeNotifierProvider<ReviewBloc>(
+          create: (context)=>ReviewBloc(),
           child: MaterialApp(
-        home: Wrapper(),
-      ),
+            home: Wrapper(),
+          ),
+        ),
     );
   }
 }

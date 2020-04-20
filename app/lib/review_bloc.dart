@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class ReviewBloc with ChangeNotifier {
   Map<int, int> _cart = {};
+   List<String> items =
+      new List<String>.generate(30, (i) => "Names ${i + 1}");
 
   Map<int, int> get cart => _cart;
 

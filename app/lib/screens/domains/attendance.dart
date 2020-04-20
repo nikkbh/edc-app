@@ -5,16 +5,14 @@ import 'package:provider/provider.dart';
 import 'review_attendance.dart';
 
 
-void main() => runApp(Attendance());
+//void main() => runApp(Attendance());
 
 class Attendance extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     
-    return ChangeNotifierProvider<ReviewBloc>(
-      create: (context)=> ReviewBloc(),
-        child: MaterialApp(
+    return MaterialApp(
         title: 'Attendance',
         home: Scaffold(
             appBar: AppBar(
@@ -23,103 +21,35 @@ class Attendance extends StatelessWidget {
             ),
             body: SingleChildScrollView(
                 child: Column(
-                children: <Widget>[
-                  BuildListView(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(padding: EdgeInsets.only(bottom: 100.0) ),
-                      RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
-                        elevation: 7.0,
-                        textColor: Colors.white,
-                        shape: new RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),            
-                        ),
-                        color: Colors.black,
-                        child: new Text("Review", style: TextStyle(fontSize: 20.0),),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewAttendance()));
-                        })
-                    ],
-                  ),
-                ],
+                  children: <Widget>[
+                    BuildListView(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(padding: EdgeInsets.only(bottom: 100.0) ),
+                        RaisedButton(
+                          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
+                          elevation: 7.0,
+                          textColor: Colors.white,
+                          shape: new RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),            
+                          ),
+                          color: Colors.black,
+                          child: new Text("Review", style: TextStyle(fontSize: 20.0),),
+                          onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewAttendance()));
+                          })
+                      ],
+                    ),
+                  ],
               ),
+                ),
             ),
-          ),
-      ),
-    );
+          );
   }
 }
 
-// Widget _design() {
-//   return Container(
-//       child: Row(
-//     mainAxisAlignment: MainAxisAlignment.spaceAround,
-//     children: <Widget>[
-//       RaisedButton(
-//         shape: RoundedRectangleBorder(
-//             borderRadius: new BorderRadius.circular(18.0),
-//             side: BorderSide(color: Colors.black)),
-//         textColor: Colors.black,
-//         color: Colors.white,
-//         onPressed: () {},
-//         child: new Text("Add"),
-//       ),
-//       RaisedButton(
-//         shape: RoundedRectangleBorder(
-//             borderRadius: new BorderRadius.circular(18.0),
-//             side: BorderSide(color: Colors.black)),
-//         textColor: Colors.black,
-//         color: Colors.white,
-//         onPressed: () {},
-//         child: new Text("Delete"),
-//       ),
-//     ],
-//   ));
-// }
 
-// Widget _submit(){
-//   return Row(
-//     mainAxisAlignment: MainAxisAlignment.center,
-//     children: <Widget>[
-//       Padding(padding: EdgeInsets.only(bottom: 100.0) ),
-//       RaisedButton(
-//         padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
-//         elevation: 7.0,
-//         textColor: Colors.white,
-//         shape: new RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(30.0),            
-//         ),
-//         color: Colors.black,
-//         child: new Text("Review", style: TextStyle(fontSize: 20.0),),
-//         onPressed: (){
-//           Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewAttendance()));
-//         })
-//     ],
-//   );
-// }
-
-// Widget _submit(BuildContext context) {
-//   return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-//     Padding(
-//       padding: const EdgeInsets.all(10),
-//       child: ButtonTheme(
-//         minWidth: 150,
-//         height: 43,
-//         child: RaisedButton(
-//           shape: RoundedRectangleBorder(
-//               borderRadius: new BorderRadius.circular(20.0),
-//               side: BorderSide(color: Colors.black)),
-//           textColor: Colors.black,
-//           color: Colors.white,
-//           onPressed: () {},
-//           child: new Text("Submit", style: TextStyle(fontSize: 20)),
-//         ),
-//       ),
-//     ),
-//   ]);
-// }
 
 class BuildListView extends StatefulWidget {
   @override
@@ -127,9 +57,8 @@ class BuildListView extends StatefulWidget {
 }
 
 class _BuildListViewState extends State<BuildListView> {
-  final List<String> items =
+final List<String> items =
       new List<String>.generate(30, (i) => "Names ${i + 1}");
-      
   @override
   Widget build(BuildContext context) {
     var bloc = Provider.of<ReviewBloc>(context);
