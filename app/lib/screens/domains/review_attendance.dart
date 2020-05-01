@@ -1,14 +1,30 @@
+import 'package:app/models/member.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app/review_bloc.dart';
+
+class MemberTileCart extends StatelessWidget {
+
+  final Member member;
+  MemberTileCart({this.member});
+
+  @override
+  Widget build(BuildContext context) {
+    return new ListTile(
+          title: Text("${member.name}"),
+    );
+  }
+}
 
 
 class ReviewAttendance extends StatelessWidget {
   ReviewAttendance({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final memberSeCart = Provider.of<List<Member>>(context);
     var bloc = Provider.of<ReviewBloc>(context);
     var cart = bloc.cart;
+    
     return Scaffold(
       appBar: AppBar(
         title: new Text('Review Attendance'),
@@ -17,15 +33,16 @@ class ReviewAttendance extends StatelessWidget {
         itemCount: cart.length,
         itemBuilder: (context, index){
           int memberIndex = cart.keys.toList()[index];
-          int count = cart[memberIndex];
+          //int count = cart[memberIndex];
           return ListTile(
-            title: Text('Name'),
+            title: Text('${memberSeCart[memberIndex].name}'),
             trailing: FlatButton.icon(
             splashColor: Colors.blueGrey,
             icon: Icon(Icons.cancel),
             label: Text(''),
             onPressed: (){
               bloc.clear(memberIndex);
+              //bloc.addToCart(index);
             }, 
             ),
           );

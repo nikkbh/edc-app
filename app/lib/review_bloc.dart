@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'models/member.dart';
 
 class ReviewBloc with ChangeNotifier {
   Map<int, int> _cart = {};
-   List<String> items =
-      new List<String>.generate(30, (i) => "Names ${i + 1}");
 
   Map<int, int> get cart => _cart;
+  // List<Member> _cart = [];
 
   void addToCart(index) {
     if (_cart.containsKey(index)) {
