@@ -33,12 +33,12 @@ class _MemberListState extends State<MemberList> {
         shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
         child: new Dismissible(
            key: UniqueKey(),//(memberSe.toString()[index]),
-          onDismissed: (direction) {
+          onDismissed: (direction){
             memberSe.removeAt(index);
             Scaffold.of(context).showSnackBar(new SnackBar(
               content: new Text("Marked Present"),
             ));    
-            bloc.addToCart(index);
+           bloc.addToCart(index);
           },
           background: new Container(
              color: Colors.red,

@@ -23,12 +23,14 @@ class CreateMeeting extends StatelessWidget {
             ),
           ]
         ),
-        body: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            BasicDateTime(),
-            MyHomePage(),
-          ]
+        body: SingleChildScrollView(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              BasicDateTime(),
+              MyHomePage(),
+            ]
+          ),
         ),
       );
   }

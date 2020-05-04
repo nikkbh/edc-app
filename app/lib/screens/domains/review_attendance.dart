@@ -17,13 +17,31 @@ class MemberTileCart extends StatelessWidget {
 }
 
 
-class ReviewAttendance extends StatelessWidget {
+class ReviewAttendance extends StatefulWidget {
   ReviewAttendance({Key key}) : super(key: key);
+
+  @override
+  _ReviewAttendanceState createState() => _ReviewAttendanceState();
+}
+
+class _ReviewAttendanceState extends State<ReviewAttendance> {
+
+  var bloc;
+  @override
+  void didChangeDependencies() {
+    // bloc = MovieDetailBlocProvider.of(context);
+    // bloc.fetchTrailersById(movieId);
+    bloc = Provider.of<ReviewBloc>(context);
+    
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final memberSeCart = Provider.of<List<Member>>(context);
-    var bloc = Provider.of<ReviewBloc>(context);
+    // var bloc = Provider.of<ReviewBloc>(context);
     var cart = bloc.cart;
+    //cart['name'] = "";
     
     return Scaffold(
       appBar: AppBar(
