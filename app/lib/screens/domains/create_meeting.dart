@@ -1,4 +1,5 @@
 import 'package:app/screens/domains/attendance.dart';
+import 'package:app/screens/domains/catalog.dart';
 import 'package:app/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -199,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 34.5),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Attendance()));//path to go on the next screen
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyCatalog()));//path to go on the next screen
                   },
                   child: Text('Take Attendance',
                     style: TextStyle(fontSize: 20.0,)
