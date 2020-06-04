@@ -26,6 +26,7 @@ class _MemberListState extends State<MemberList> {
     //print(memberSe.documents);
     
     return ListView.builder(
+      
       itemCount: memberSe.length,
       itemBuilder: (context, index){
       return Card(

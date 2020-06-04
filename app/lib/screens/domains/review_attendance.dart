@@ -48,7 +48,7 @@ class _ReviewAttendanceState extends State<ReviewAttendance> {
         title: new Text('Review Attendance'),
       ),
       body: ListView.builder(
-        itemCount: cart.length,
+        itemCount: memberSeCart.length,
         itemBuilder: (context, index){
           int memberIndex = cart.keys.toList()[index];
           //int count = cart[memberIndex];
