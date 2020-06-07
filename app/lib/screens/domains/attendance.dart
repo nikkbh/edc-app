@@ -1,16 +1,30 @@
 
-import 'package:app/review_bloc.dart';
-import 'package:app/screens/domains/member_list.dart';
+import 'package:app/screens/domains/cart.dart';
 import 'package:app/services/database.dart';
 import 'package:flutter/material.dart';
-import 'review_attendance.dart';
+import 'package:provider/provider.dart';
 import 'package:app/models/member.dart';
 
 
 //void main() => runApp(Attendance());
 
-class Attendance extends StatelessWidget {
+class Attendance extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _AttendanceState createState() => _AttendanceState();
+}
+
+class _AttendanceState extends State<Attendance> {
+
+  List<Member> memberSe= List<Member>();
+   List<Member> cart= List<Member>();
+    //print(memberSe.documents);
+  @override
+  void initState(){
+    super.initState();
+    _populateList();
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -29,7 +43,38 @@ class Attendance extends StatelessWidget {
                         Expanded(
                           child: SizedBox(
                             height: 200.0,
-                            child: MemberList(),
+                            child: ListView.builder(
+                              itemCount: memberSe.length,
+                              itemBuilder: (context, index){
+                                var item = memberSe[index];
+                              return Card(
+                                margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
+                                shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black)),
+                                child: ListTile(
+                                  title: Text(item.name),
+                                  trailing: GestureDetector(
+                                    child: (!cart.contains(item))
+                                    ? Icon(
+                                      Icons.add_circle,
+                                      color: Colors.green,
+                                    )
+                                    : Icon(
+                                      Icons.remove_circle,
+                                      color: Colors.red,
+                                    ),
+                                    onTap: (){
+                                      setState(() {
+                                        if(!cart.contains(item))
+                                          cart.add(item);
+                                        else
+                                          cart.remove(item);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            ),
                           ),
                         ),
                       ],
@@ -48,7 +93,7 @@ class Attendance extends StatelessWidget {
                             color: Colors.black,
                             child: new Text("Review", style: TextStyle(fontSize: 20.0),),
                             onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewAttendance()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> Cart(cart)));
                             })
                         ],
                       ),
@@ -82,6 +127,13 @@ class Attendance extends StatelessWidget {
               //     ),
             )
         );
+  }
+  void _populateList(){
+    var list = [];
+    list = Provider.of<List<Member>>(context, listen: false);
+    setState(() {
+      memberSe = list;
+    });
   }
 }
 

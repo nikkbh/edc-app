@@ -1,50 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:app/models/cart.dart';
+import 'package:app/models/member.dart';
+class Cart extends StatefulWidget {
+  final List<Member> _cart;
+  Cart(this._cart);
 
+  @override
+  _CartState createState() => _CartState(this._cart);
+}
 
-class MyCart extends StatelessWidget {
+class _CartState extends State<Cart> {
+  _CartState(this._cart);
+
+  List<Member> _cart;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Final Check'),
-        backgroundColor: Colors.blue,
+        title: new Text('Review Attendance'),
       ),
-      body: Container(
-        // color: Colors.yellow,
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: _CartList(),
+      body: ListView.builder(
+        itemCount: _cart.length,
+        itemBuilder: (context, index){
+          var item = _cart[index];
+          return Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+              child: Card(
+                elevation: 4.0,
+                child: ListTile(
+                  title: Text(item.name),
+                  trailing: GestureDetector(
+                      child: Icon(
+                        Icons.remove_circle,
+                        color: Colors.red,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _cart.remove(item);
+                        });
+                      }),
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class _CartList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var cart = Provider.of<CartModel>(context);
-
-    return ListView.builder(
-      itemCount: cart.items.length,
-      itemBuilder: (context, index) => ListTile(
-        leading: Icon(Icons.done),
-        title: Text(
-          cart.items[index].name,
-        ),
-        trailing: IconButton(
-          icon: Icon(Icons.delete), 
-          onPressed: cart.items.contains(index) ? null : () => cart.remove(index),
-          ),
+            );
+        }
       ),
     );
   }
